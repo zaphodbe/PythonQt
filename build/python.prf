@@ -1,13 +1,24 @@
 # profile to include and link Python
 
 # Change this variable to your python version (2.6, 2.7, 3.3, ...)
-win32:PYTHON_VERSION=27
-unix:PYTHON_VERSION=2.7
+win32:PYTHON_VERSION=35
+unix:PYTHON_VERSION=3.5
 
 macx {
+  # on macos, python-config is used to autodetect Python.
+  # make sure that you have installed a matching python-dev package.
+
+  #MYPATH = $$system(echo $PATH)
+  #message(MYPATH: $$MYPATH)
+  LIBS += -L$$system(python$${PYTHON_VERSION}-config --prefix)/lib
+  LIBS += $$system(python$${PYTHON_VERSION}-config --libs)
+  QMAKE_CXXFLAGS += $$system(python$${PYTHON_VERSION}-config --includes)
+  message(LIBS: $$LIBS)
+  message(QMAKE_CXXFLAGS: $$QMAKE_CXXFLAGS)
+
   # for macx you need to have the Python development kit installed as framework
-  INCLUDEPATH += /System/Library/Frameworks/Python.framework/Headers
-  LIBS += -F/System/Library/Frameworks -framework Python
+  #INCLUDEPATH += /System/Library/Frameworks/Python.framework/Headers
+  #LIBS += -F/System/Library/Frameworks -framework Python
 } else:win32 {
   # for windows install a Python development kit or build Python yourself from the sources
   # Make sure that you set the environment variable PYTHON_PATH to point to your
